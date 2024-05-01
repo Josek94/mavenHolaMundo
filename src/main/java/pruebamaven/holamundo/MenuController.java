@@ -12,12 +12,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.TextAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+
 
 import javafx.fxml.FXML;
 
@@ -33,7 +39,12 @@ public class MenuController {
 	@FXML
 	private void enviarNombre() {
 		String nombre = entradaNombre.getText();
-		etiquetaNombre.setText("Hola " + nombre + ", ¿que tal?");
+		//etiquetaNombre.setText("Hola " + nombre + ", ¿que tal?");
+		Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Hola");
+        alert.setHeaderText(null);
+        alert.setContentText("Hola " + nombre + ", ¿que tal?");
+        alert.showAndWait();
 	}
 	
 	@FXML
@@ -101,6 +112,47 @@ public class MenuController {
 	            ex.printStackTrace();
 	        }
 	    }
+	
+	@FXML
+	private void generarPDF() {
+		String tituloDocumento = entradaNombre.getText();
+		String texto = "Este texto es de prueba";
+		
+        try {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialFileName(tituloDocumento + ".pdf");
+            fileChooser.getExtensionFilters().add(new ExtensionFilter("Documentos PDF", "*.pdf"));
+            File rutaPDF = fileChooser.showSaveDialog(null);
+            if (rutaPDF != null) {
+                PDDocument documentoPDF = new PDDocument();
+                PDPage pagina = new PDPage();
+                documentoPDF.addPage(pagina);
+
+                PDPageContentStream contenido = new PDPageContentStream(documentoPDF, pagina);
+                contenido.beginText();
+                contenido.setFont(PDType1Font.HELVETICA_BOLD, 12);
+                contenido.newLineAtOffset(100, 700);
+                contenido.showText(tituloDocumento);
+                contenido.newLine();
+                contenido.setFont(PDType1Font.HELVETICA, 10);
+                contenido.showText(texto);
+                contenido.endText();
+                contenido.close();
+
+                documentoPDF.save(rutaPDF);
+                documentoPDF.close();
+
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Éxito");
+                alert.setHeaderText(null);
+                alert.setContentText("Documentos generados correctamente");
+                alert.showAndWait();
+            }
+        } catch (IOException ex) {
+            System.err.println("Error al guardar el PDF");
+            ex.printStackTrace();
+        }
+    }
 	
 	@FXML
     private void switchToSecondary() throws IOException {

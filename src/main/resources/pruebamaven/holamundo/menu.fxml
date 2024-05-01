@@ -40,6 +40,7 @@
             <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="2">
                <children>
                   <Button mnemonicParsing="false" onAction="#generarWord" text="Generar Word" textAlignment="CENTER" />
+                  <Button mnemonicParsing="false" onAction="#generarPDF" text="Generar PDF" />
                   <Button defaultButton="true" mnemonicParsing="false" onAction="#salir" text="Salir" />
                </children>
                <GridPane.margin>
