@@ -1,17 +1,17 @@
 package pruebamaven.holamundo;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
-
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.TextAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
@@ -37,7 +37,7 @@ public class MenuController {
 	}
 	
 	@FXML
-	private void generarWord(java.awt.event.ActionEvent evt) {
+	private void generarWord() {
 		String tituloDocumento = entradaNombre.getText();
 		String texto = "Este texto es de prueba";
 		
@@ -72,12 +72,35 @@ public class MenuController {
 		    word.close();
 		    Desktop.getDesktop().open(ruta);
 		} catch (FileNotFoundException ex) {
-		    Logger.getLogger(JF_Validar.class.getName()).log(Level.SEVERE, null, ex);
+		    Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (IOException ex) {
-		    Logger.getLogger(JF_Validar.class.getName()).log(Level.SEVERE, null, ex);
-		}*/
+		    Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
-	
+	*/
+		   try {
+	            FileChooser fileChooser = new FileChooser();
+	            fileChooser.setInitialFileName(tituloDocumento + ".docx");
+	            fileChooser.getExtensionFilters().add(new ExtensionFilter("Documentos Word", "*.docx"));
+	            File ruta = fileChooser.showSaveDialog(null);
+	            if (ruta != null) {
+	                OutputStream word = new FileOutputStream(ruta);
+	                documento.write(word);
+	                word.close();
+	                Alert alert = new Alert(AlertType.INFORMATION);
+	                alert.setTitle("Éxito");
+	                alert.setHeaderText(null);
+	                alert.setContentText("Documento generado correctamente");
+	                alert.showAndWait();
+	            }
+	        } catch (FileNotFoundException ex) {
+	            System.err.println("Error: No se pudo encontrar el archivo");
+	            ex.printStackTrace();
+	        } catch (IOException ex) {
+	            System.err.println("Error de entrada/salida");
+	            ex.printStackTrace();
+	        }
+	    }
 	
 	@FXML
     private void switchToSecondary() throws IOException {
